@@ -21,8 +21,11 @@ namespace WebShopApp.Infrastructure.Data.Domain
 
         [Required]
         [MaxLength(30)]
-        public string Adress { get; set; } = null!;
+        public string Address { get; set; } = null!;
+        
+        }
     }
 
 
-}
+
+

@@ -5,11 +5,12 @@ using WebShopApp.Infrastructure.Data.Domain;
 
 namespace WebShopAppp.Infastructure.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            
         }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Category> Categories { get; set;}
