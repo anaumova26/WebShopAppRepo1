@@ -18,12 +18,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.22" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WebShopApp.Core\WebShopApp.Core.csproj" />
     <ProjectReference Include="..\WebShopApp.Infrastructure\WebShopApp.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Category\" />
   </ItemGroup>
 
 </Project>

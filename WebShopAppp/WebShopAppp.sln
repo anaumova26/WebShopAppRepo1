@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShopAppp", "WebShopAppp\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShopApp.Infrastructure", "WebShopApp.Infrastructure\WebShopApp.Infrastructure.csproj", "{16453886-D8C8-4C16-85AE-0CCA20642C78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShopApp.Core", "WebShopApp.Core\WebShopApp.Core.csproj", "{C4822C71-5ED7-4C6C-B5BD-6ED23ADF5E55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShopApp.Core", "WebShopApp.Core\WebShopApp.Core.csproj", "{C4822C71-5ED7-4C6C-B5BD-6ED23ADF5E55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
