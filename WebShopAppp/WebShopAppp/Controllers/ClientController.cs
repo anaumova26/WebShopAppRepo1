@@ -1,14 +1,55 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
+using WebShopApp.Core.Contracts;
+using WebShopApp.Infrastructure.Data.Domain;
+
+using WebShopAppp.Models.Client;
 
 namespace WebShopAppp.Controllers
 {
     public class ClientController : Controller
     {
-        // GET: ClientController
-        public ActionResult Index()
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IOrderService _orderService;
+
+        public ClientController(UserManager<ApplicationUser> userManager, IOrderService orderService)
         {
-            return View();
+            this._userManager = userManager;
+            this._orderService = orderService;
+        }
+        // GET: ClientController
+        public async Task<IActionResult> Index()
+        {
+            var allUsers = this._userManager.Users
+                .Select(u => new ClientIndexVM
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Address = u.Address,
+                    Email = u.Email,
+
+
+                }).ToList();
+
+            //Id на всички администратори
+            var adminIds = (await _userManager.GetUsersInRoleAsync("Administrator"))
+                .Select(a => a.Id).ToList();
+
+            //Ако потребителя е в списъка, то IsAdmin става true
+            foreach (var user in allUsers)
+            {
+                user.IsAdmin = adminIds.Contains(user.Id);
+            }
+
+            //Вадим само клиентите без админа и ги сортираме по uesrname
+            var users = allUsers.Where(x => x.IsAdmin == false)
+                .OrderBy(x => x.UserName).ToList();
+
+            return this.View(users);
         }
 
         // GET: ClientController/Details/5
@@ -60,24 +101,60 @@ namespace WebShopAppp.Controllers
         }
 
         // GET: ClientController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
-            return View();
+            var user = this._userManager.Users.FirstOrDefault(x => x.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+
+            }
+            ClientDeleteVM userToDelete = new ClientDeleteVM()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address = user.Address,
+                Email = user.Email,
+                UserName = user.UserName,
+            };
+            return View(userToDelete);
         }
 
         // POST: ClientController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(ClientDeleteVM bidingModel)
         {
-            try
+
+            string id = bidingModel.Id;
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+            else if (_orderService.GetOrdersByUser(id).Count > 0)
             {
-                return View();
+                return RedirectToAction("Deny");
+
             }
+            IdentityResult result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Success");
+            }
+            return NotFound();
+
+        }
+
+        public ActionResult Success()
+        {
+            return View();
+        }
+
+        public ActionResult Deny()
+        {
+            return View();
         }
     }
 }
